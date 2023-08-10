@@ -1,10 +1,10 @@
 namespace Test;
 
-public class EventTests : IClassFixture<PublisherFixture>
+public class EventTests : IClassFixture<TestFixture>
 {
     public readonly HttpClient _publisherClient;
 
-    public EventTests(PublisherFixture fixture)
+    public EventTests(TestFixture fixture)
     {
         _publisherClient = fixture.PublisherClient;
     }

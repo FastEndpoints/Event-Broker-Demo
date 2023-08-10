@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.TestHost;
 
 namespace Test;
 
-public class PublisherFixture : IDisposable
+public class TestFixture : IDisposable
 {
     public HttpClient PublisherClient { get; set; }
 
@@ -12,7 +12,7 @@ public class PublisherFixture : IDisposable
     private readonly WebApplicationFactory<Subscriber.Program> _subscriber = new();
     private readonly WebApplicationFactory<Publisher.Program> _publisher = new();
 
-    public PublisherFixture()
+    public TestFixture()
     {
         PublisherClient = _publisher.WithWebHostBuilder(c =>
         {
