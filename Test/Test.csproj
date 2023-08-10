@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
@@ -23,6 +23,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="FastEndpoints.Messaging.Remote.Testing" Version="5.*" />
+      <!--<ProjectReference Include="..\..\FastEndpoints\Library\Src\Messaging.Remote.Testing\FastEndpoints.Messaging.Remote.Testing.csproj" />-->
       <ProjectReference Include="..\Src\Broker\Broker.csproj" />
       <ProjectReference Include="..\Src\Contracts\Contracts.csproj" />
       <ProjectReference Include="..\Src\Publisher\Publisher.csproj" />
