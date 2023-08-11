@@ -2,22 +2,15 @@
 using FastEndpoints;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
-namespace Broker;
+var bld = WebApplication.CreateBuilder();
+bld.WebHost.ConfigureKestrel(o => o.ListenLocalhost(6000, o => o.Protocols = HttpProtocols.Http2));
+bld.AddHandlerServer();
 
-sealed class Program
+var app = bld.Build();
+app.MapHandlers(h =>
 {
-    private static void Main()
-    {
-        var bld = WebApplication.CreateBuilder();
-        bld.WebHost.ConfigureKestrel(o => o.ListenLocalhost(6000, o => o.Protocols = HttpProtocols.Http2));
-        bld.AddHandlerServer();
+    h.RegisterEventHub<SomethingHappened>(HubMode.EventBroker);
+});
+app.Run();
 
-        var app = bld.Build();
-        app.MapHandlers(h =>
-        {
-            h.RegisterEventHub<SomethingHappened>(HubMode.EventBroker);
-        });
-
-        app.Run();
-    }
-}
+namespace Broker { public partial class Program { } };

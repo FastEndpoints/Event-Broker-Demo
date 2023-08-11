@@ -1,21 +1,16 @@
 ﻿using Contracts;
 using FastEndpoints;
+using Subscriber;
 
-namespace Subscriber;
+var bld = WebApplication.CreateBuilder();
+bld.WebHost.ConfigureKestrel(o => o.ListenLocalhost(7000));
+var app = bld.Build();
 
-sealed class Program
+app.MapRemote("http://localhost:6000", c =>
 {
-    private static void Main()
-    {
-        var bld = WebApplication.CreateBuilder();
-        bld.WebHost.ConfigureKestrel(o => o.ListenLocalhost(7000));
-        var app = bld.Build();
+    c.Subscribe<SomethingHappened, WhenSomethingHappens>();
+});
 
-        app.MapRemote("http://localhost:6000", c =>
-        {
-            c.Subscribe<SomethingHappened, WhenSomethingHappens>();
-        });
+app.Run();
 
-        app.Run();
-    }
-}
+namespace Subscriber { public partial class Program { } };

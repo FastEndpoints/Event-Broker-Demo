@@ -1,37 +1,31 @@
 ﻿using Contracts;
 using FastEndpoints;
 
-namespace Publisher;
+var bld = WebApplication.CreateBuilder();
+bld.WebHost.ConfigureKestrel(o => o.ListenLocalhost(5000));
+var app = bld.Build();
 
-sealed class Program
+app.MapRemote("http://localhost:6000", c =>
 {
-    private static void Main()
+    c.RegisterEvent<SomethingHappened>();
+});
+
+app.MapGet("/event/{name}", async (string name) =>
+{
+    for (int i = 1; i <= 10; i++)
     {
-        var bld = WebApplication.CreateBuilder();
-        bld.WebHost.ConfigureKestrel(o => o.ListenLocalhost(5000));
-        var app = bld.Build();
-
-        app.MapRemote("http://localhost:6000", c =>
+        await new SomethingHappened
         {
-            c.RegisterEvent<SomethingHappened>();
-        });
+            Id = i,
+            Description = name
+        }
+        .RemotePublishAsync();
 
-        app.MapGet("/event/{name}", async (string name) =>
-        {
-            for (int i = 1; i <= 10; i++)
-            {
-                await new SomethingHappened
-                {
-                    Id = i,
-                    Description = name
-                }
-                .RemotePublishAsync();
-
-                await Task.Delay(500);
-            }
-            return Results.Ok("events published!");
-        });
-
-        app.Run();
+        await Task.Delay(500);
     }
-}
+    return Results.Ok("events published!");
+});
+
+app.Run();
+
+namespace Publisher { public partial class Program { } };
